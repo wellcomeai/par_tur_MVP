@@ -6,8 +6,8 @@ interface ChatState {
   isLoading: boolean
   addMessage: (message: ChatMessage) => void
   appendToLastMessage: (content: string) => void
-  setLastMessageToolUse: (tool: string, input: Record<string, unknown>) => void
-  setLastMessageToolResult: (data: unknown) => void
+  addToolStep: (tool: string, input: Record<string, unknown>) => void
+  updateLastToolStep: (data: unknown) => void
   setLastMessageStreaming: (isStreaming: boolean) => void
   setLoading: (loading: boolean) => void
   clearMessages: () => void
@@ -30,22 +30,25 @@ export const useChatStore = create<ChatState>((set) => ({
       return { messages }
     }),
 
-  setLastMessageToolUse: (tool, input) =>
+  addToolStep: (tool, input) =>
     set((state) => {
       const messages = [...state.messages]
       const last = messages[messages.length - 1]
       if (last && last.role === 'assistant') {
-        messages[messages.length - 1] = { ...last, toolUse: { tool, input } }
+        const steps = [...(last.toolSteps ?? []), { tool, input }]
+        messages[messages.length - 1] = { ...last, toolSteps: steps }
       }
       return { messages }
     }),
 
-  setLastMessageToolResult: (data) =>
+  updateLastToolStep: (data) =>
     set((state) => {
       const messages = [...state.messages]
       const last = messages[messages.length - 1]
-      if (last && last.role === 'assistant') {
-        messages[messages.length - 1] = { ...last, toolResult: data }
+      if (last && last.role === 'assistant' && last.toolSteps?.length) {
+        const steps = [...last.toolSteps]
+        steps[steps.length - 1] = { ...steps[steps.length - 1], result: data }
+        messages[messages.length - 1] = { ...last, toolSteps: steps }
       }
       return { messages }
     }),

@@ -48,8 +48,8 @@ export function ChatWindow() {
     isLoading,
     addMessage,
     appendToLastMessage,
-    setLastMessageToolUse,
-    setLastMessageToolResult,
+    addToolStep,
+    updateLastToolStep,
     setLastMessageStreaming,
     setLoading,
   } = useChatStore()
@@ -72,9 +72,9 @@ export function ChatWindow() {
         if (event.type === 'text_delta' && event.content) {
           appendToLastMessage(event.content)
         } else if (event.type === 'tool_use' && event.tool) {
-          setLastMessageToolUse(event.tool, event.input ?? {})
+          addToolStep(event.tool, event.input ?? {})
         } else if (event.type === 'tool_result') {
-          setLastMessageToolResult(event.data)
+          updateLastToolStep(event.data)
         } else if (event.type === 'done') {
           setLastMessageStreaming(false)
           setLoading(false)

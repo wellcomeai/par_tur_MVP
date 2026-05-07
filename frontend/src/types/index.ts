@@ -3,10 +3,15 @@ export interface BanyaInfo {
   name: string
   address: string
   rating: number
+  reviews_count: number
   lat: number
   lon: number
   phone: string
+  website: string
   schedule: string
+  description?: string
+  photos?: string[]
+  rubrics?: string[]
   error?: string
 }
 
@@ -47,11 +52,16 @@ export interface SSEEvent {
   data?: unknown
 }
 
+export interface ToolStep {
+  tool: string
+  input: Record<string, unknown>
+  result?: unknown
+}
+
 export interface ChatMessage {
   id: string
   role: 'user' | 'assistant'
   content: string
-  toolUse?: { tool: string; input: Record<string, unknown> }
-  toolResult?: unknown
+  toolSteps?: ToolStep[]
   isStreaming?: boolean
 }
