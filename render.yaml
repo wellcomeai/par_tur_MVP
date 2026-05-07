@@ -1,8 +1,8 @@
 services:
   - type: web
-    name: partour-backend
+    name: partour
     env: python
-    buildCommand: pip install -r backend/requirements.txt
+    buildCommand: cd frontend && npm install && npm run build && cd ../backend && pip install -r requirements.txt
     startCommand: cd backend && uvicorn app.main:app --host 0.0.0.0 --port $PORT
     envVars:
       - key: OPENROUTER_API_KEY
@@ -10,13 +10,6 @@ services:
       - key: TWOGIS_API_KEY
         sync: false
       - key: FRONTEND_URL
-        sync: false
-
-  - type: web
-    name: partour-frontend
-    env: static
-    buildCommand: cd frontend && npm install && npm run build
-    staticPublishPath: frontend/dist
-    envVars:
+        value: ""
       - key: VITE_API_URL
-        sync: false
+        value: ""
