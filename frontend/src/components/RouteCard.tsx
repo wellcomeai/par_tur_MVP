@@ -6,26 +6,32 @@ interface Props {
 
 export function RouteCard({ route }: Props) {
   return (
-    <div className="bg-gray-800 border border-orange-500 rounded-xl p-4 my-2">
+    <div
+      className="rounded-xl p-4 my-1"
+      style={{ background: '#fff7ed', border: '1px solid #fdba74' }}
+    >
       <div className="flex items-center gap-2 mb-3">
-        <span className="text-orange-400 text-lg">🗺️</span>
-        <h3 className="font-semibold text-orange-400">
-          ПарТур по {route.region} — {route.total_banyas} бани
-        </h3>
+        <span className="text-lg">🗺️</span>
+        <div>
+          <h3 className="font-semibold text-orange-700 text-sm">
+            ПарТур по {route.region}
+          </h3>
+          <p className="text-orange-400 text-xs">{route.total_banyas} бани · {route.estimated_duration}</p>
+        </div>
       </div>
-      <p className="text-gray-400 text-xs mb-3">
-        Примерное время: {route.estimated_duration}
-      </p>
       <div className="space-y-3">
         {route.route.map((stop) => (
           <div key={stop.order} className="flex gap-3">
-            <div className="flex-shrink-0 w-7 h-7 bg-orange-500 rounded-full flex items-center justify-center text-white text-xs font-bold">
+            <div
+              className="flex-shrink-0 w-6 h-6 rounded-full flex items-center justify-center text-white text-xs font-bold mt-0.5"
+              style={{ background: '#f97316' }}
+            >
               {stop.order}
             </div>
             <div>
-              <p className="text-white text-sm font-medium">{stop.name}</p>
-              <p className="text-gray-400 text-xs">{stop.address}</p>
-              <p className="text-orange-300 text-xs mt-0.5 italic">{stop.tip}</p>
+              <p className="text-stone-700 text-sm font-medium leading-snug">{stop.name}</p>
+              <p className="text-stone-400 text-xs">{stop.address}</p>
+              <p className="text-orange-500 text-xs mt-0.5 italic">{stop.tip}</p>
             </div>
           </div>
         ))}

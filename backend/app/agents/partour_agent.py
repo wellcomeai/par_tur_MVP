@@ -36,7 +36,7 @@ async def _call_openrouter(messages: list[dict], stream: bool = False) -> httpx.
     headers = {
         "Authorization": f"Bearer {settings.OPENROUTER_API_KEY}",
         "HTTP-Referer": "https://partour.app",
-        "X-Title": "ПарТур Агент",
+        "X-Title": "ParTur Agent",
         "Content-Type": "application/json",
     }
     payload = {
