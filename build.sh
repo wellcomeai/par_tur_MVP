@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
-echo "=== Установка Node.js через nvm ==="
-export NVM_DIR="$HOME/.nvm"
-if [ ! -d "$NVM_DIR" ]; then
-  curl -fsSL https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
-fi
-source "$NVM_DIR/nvm.sh"
-nvm install 20
-nvm use 20
+# Render устанавливает Node.js в /opt/render/project/nodes/ — добавим в PATH
+for dir in /opt/render/project/nodes/node-*/bin; do
+  [ -d "$dir" ] && export PATH="$dir:$PATH"
+done
+
+echo "=== Диагностика ==="
+echo "Node: $(node --version 2>/dev/null || echo 'НЕ НАЙДЕН')"
+echo "npm:  $(npm --version 2>/dev/null || echo 'НЕ НАЙДЕН')"
+echo "pwd:  $(pwd)"
+echo "ls:   $(ls)"
 
 echo "=== Сборка фронтенда ==="
 cd frontend
@@ -16,9 +18,7 @@ npm install
 npm run build
 cd ..
 
-echo "=== Установка Python-зависимостей ==="
-cd backend
-pip install -r requirements.txt
-cd ..
+echo "=== Python зависимости ==="
+pip install -r backend/requirements.txt
 
-echo "=== Сборка завершена ==="
+echo "=== Готово ==="
