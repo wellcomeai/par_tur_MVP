@@ -9,13 +9,15 @@ logger = get_logger(__name__)
 
 TWOGIS_BASE_URL = "https://catalog.api.2gis.com/3.0/items"
 
+# Search uses only stable fields to avoid breaking 2GIS results
 _SEARCH_FIELDS = (
     "items.contact_groups,items.schedule,items.description,"
-    "items.reviews,items.point,items.photos,items.rubrics"
+    "items.rating,items.reviews,items.point"
 )
+# Detail endpoint supports extended fields
 _DETAIL_FIELDS = (
     "items.contact_groups,items.schedule,items.description,"
-    "items.reviews,items.point,items.photos,items.rubrics,items.attribute_groups"
+    "items.rating,items.reviews,items.point,items.photos,items.rubrics"
 )
 
 
@@ -157,11 +159,13 @@ def _extract_rubrics(item: dict[str, Any]) -> list[str]:
 def normalize_item(item: dict[str, Any]) -> dict[str, Any]:
     point = item.get("point", {})
     reviews = item.get("reviews", {})
+    # 2GIS returns rating either as top-level float (items.rating) or inside reviews object
+    rating = reviews.get("rating") or item.get("rating") or 0.0
     return {
         "id": item.get("id", ""),
         "name": item.get("name", "Неизвестно"),
         "address": item.get("full_name", item.get("address_name", "")),
-        "rating": reviews.get("rating", 0.0),
+        "rating": float(rating),
         "reviews_count": reviews.get("count", 0),
         "lat": point.get("lat", 0.0),
         "lon": point.get("lon", 0.0),
